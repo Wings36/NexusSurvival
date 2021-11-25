@@ -1,6 +1,10 @@
 package nexusSurvival.homeTeleporter;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,13 +12,17 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public class TeleporterClock implements Listener {
 
@@ -33,6 +41,7 @@ public class TeleporterClock implements Listener {
         }
         drawCircle(location, 0);
     }
+
 
     //set to private later
     public void tpAni(Player player) {
@@ -60,6 +69,7 @@ public class TeleporterClock implements Listener {
             double radiusTwo = 0.0;
             double radiusThree = 0.0;
             double height = playerY;
+            double castTime = 10.0;
         };
         //
         BukkitScheduler bukkitscheduler = Bukkit.getScheduler();
@@ -73,6 +83,22 @@ public class TeleporterClock implements Listener {
             ref.radiusThree = ref.radiusThree - rateCircleThreeShrink;
 
         }, 20L , 1L);
+
+        BukkitTask timeKeeper = bukkitscheduler.runTaskTimer(plugin, () -> {
+            double rateOfTime = 10.0/200;
+            ref.castTime = ref.castTime - rateOfTime;
+        }, 0L, 1L);
+
+        BukkitTask castTimer = bukkitscheduler.runTaskTimer(plugin, () -> {
+            String castMeterString = "";
+            char[] castMeter = {'=','=','=','=','=','=','=','=','=','=','=','=','=','=','=','=','=','=','=','=','=','='};
+            for (int x=1; x <= 10 - (int)ref.castTime; x++) {
+                castMeter[x-1] = ' ';
+                castMeter[22 - x] = ' ';
+                castMeterString = new String(castMeter);
+            }
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR,  TextComponent.fromLegacyText(ChatColor.AQUA.AQUA + "Casting... " + String.format("%.2f", ref.castTime) + "s: " + castMeterString));
+        }, 1L, 1L);
 
         BukkitTask summonCircle = bukkitscheduler.runTaskTimer(plugin, () -> {
             drawCircle(player.getLocation(), ref.radius);
@@ -113,12 +139,16 @@ public class TeleporterClock implements Listener {
         int taskTeleportCylinder = teleportCylinder.getTaskId();
         int taskSummonCircle = summonCircle.getTaskId();
         int taskSummonCircleTwo = summonCircleTwo.getTaskId();
+        int taskCastTimer = castTimer.getTaskId();
+        int taskTimeKeeper = timeKeeper.getTaskId();
 
         //end
         BukkitTask endOne = bukkitscheduler.runTaskLater(plugin, () -> {
+            bukkitscheduler.cancelTask(taskCastTimer);
             bukkitscheduler.cancelTask(taskSkyBeam);
             bukkitscheduler.cancelTask(taskGroundCircle);
             bukkitscheduler.cancelTask(taskTeleportCylinder);
+            bukkitscheduler.cancelTask(taskTimeKeeper);
         }, 200L); //10 second delay
 
 
@@ -139,7 +169,7 @@ public class TeleporterClock implements Listener {
         int taskEndThree = endThree.getTaskId();
         int taskEndFour = endFour.getTaskId();
 
-        int[] playerTasks = {taskSkyBeam, taskGroundCircle, taskTeleportCylinder, taskSummonCircle, taskSummonCircleTwo, taskEndOne, taskEndTwo, taskEndThree, taskEndFour};
+        int[] playerTasks = {taskSkyBeam, taskGroundCircle, taskTeleportCylinder, taskSummonCircle, taskSummonCircleTwo, taskEndOne, taskEndTwo, taskEndThree, taskEndFour, taskCastTimer, taskTimeKeeper};
         bukkitScheduleList.put(player, playerTasks);
     }
 
@@ -158,6 +188,16 @@ public class TeleporterClock implements Listener {
         this.plugin = plugin;
         clock = new ItemStack(Material.CLOCK);
         setupClock();
+        checkPlayers();
+    }
+
+    private void checkPlayers() {
+        Collection<? extends Player> players = plugin.getServer().getOnlinePlayers();
+        if(!(players.isEmpty())) {
+            for (Player player : players) {
+                reloadPlayer(player);
+            }
+        }
     }
 
     @EventHandler
@@ -186,7 +226,7 @@ public class TeleporterClock implements Listener {
         if (bukkitScheduleList.containsKey(player)) {
             BukkitScheduler bukkitscheduler = Bukkit.getScheduler();
             int[] playerTasks = bukkitScheduleList.get(player).clone();
-            for (int x = 0; x <= 8; x++) {
+            for (int x = 0; x <= 10; x++) {
                 bukkitscheduler.cancelTask(playerTasks[x]);
             }
             bukkitScheduleList.remove(player);
@@ -247,6 +287,13 @@ public class TeleporterClock implements Listener {
         ItemMeta meta = clock.getItemMeta();
         meta.setDisplayName("Recall Clock");
         meta.setUnbreakable(true);
+        meta.addEnchant(Enchantment.PROTECTION_FALL, 1, true);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        List<String> lore = new ArrayList<String>();
+        lore.add("A ancient device that absorbs energy to transports the user back to a set point");
+        meta.setLore(lore);
+        clock.setAmount(1);
+        clock.setItemMeta(meta);
     }
 
     private void logLocation(Location location, Player player) {
