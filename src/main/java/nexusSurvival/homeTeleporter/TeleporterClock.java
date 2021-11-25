@@ -176,7 +176,7 @@ public class TeleporterClock implements Listener {
     @EventHandler
     public void interruptTPEvent(PlayerInteractEvent event) {
         if (event.getPlayer().getInventory().getItemInMainHand().equals(clock)) {
-            if (!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) || event.getClickedBlock() != ) {
+            if (!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
                 interruptTP(event.getPlayer());
             }
         }
@@ -220,7 +220,7 @@ public class TeleporterClock implements Listener {
         double zCurrent = location.getZ();
         double yCurrent = location.getY();
         World world = location.getWorld();
-        final double pi = 3.14159265 * 2;
+        final double pi = Math.PI * 2;
 
         for (double theta = 0.0; theta <= pi; theta += 0.1) {
             double z = (Math.cos(theta) * radius) + zCurrent;
