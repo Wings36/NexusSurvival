@@ -1,0 +1,37 @@
+main: nexusSurvival.Main
+name: NexusSurvival
+version: 1.0
+api-version: 1.17
+commands:
+  getclock:
+    description: Spawns in a teleport clock
+    usage: /getclock
+    permission: nexussurvival.gc
+  spawncircle:
+    description: slkdjflsd
+    usage: /spawncircle [int]
+    permission: nexussurvival.sc
+  resettp:
+    description: Resets TP point set by TP Clock
+    usage: /resettp
+    permission: nexussurvival.tp
+  checktp:
+    description: Reloads TP point from file in case it glitches out
+    usage: /checktp [name]
+    permission: nexussurvival.tp
+  clockreplace:
+    description: admin only
+    usage: /clockreplace [name] [x] [y] [z]
+    permission: nexussurvival.cr
+  tplookup:
+    description: admin only
+    usage: /tplookup [player]
+    permission: nexussurvival.tpl
+  admintest:
+    description: sdlkajflsjkdaf
+    usage: lksadjfl
+    permission: nexussurvival.ad
+  spawnsphere:
+    description: slkdjflsd
+    usage: /spawnsphere[int]
+    permission: nexussurvival.sc
