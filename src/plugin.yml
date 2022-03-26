@@ -35,3 +35,7 @@ commands:
     description: slkdjflsd
     usage: /spawnsphere[int]
     permission: nexussurvival.sc
+  StartSpreadEvent:
+    description: Event
+    usage: Event
+    permission: nexussurvival.spread

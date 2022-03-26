@@ -83,7 +83,6 @@ public class TeleporterClock implements Listener {
             ref.radiusThree = ref.radiusThree - rateCircleThreeShrink;
 
         }, 20L , 1L);
-
         BukkitTask timeKeeper = bukkitscheduler.runTaskTimer(plugin, () -> {
             double rateOfTime = 10.0/200;
             ref.castTime = ref.castTime - rateOfTime;
