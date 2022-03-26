@@ -78,9 +78,12 @@ public class SpreadStart implements CommandExecutor {
                 plugin.getServer().getConsoleSender().sendMessage("GO");
                 for(Player player : players) {
                     player.getInventory().clear();
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "advancement revoke " + player.getName() + " everything");
                     player.setExp(0);
+                    plugin.getConfig().set("resetevent.Players." + player.getName() + ".status", true);
                 }
                 plugin.getConfig().set("resetevent.active", true);
+                plugin.saveConfig();
             }, 600L);
             BukkitTask worldborder = bukkitscheduler.runTaskLater(plugin, () -> {
                 Location WBnew = new Location(plugin.getServer().getWorld("world"), 9000, 64, 9000);
@@ -96,7 +99,7 @@ public class SpreadStart implements CommandExecutor {
             }, 615L);
 
             BukkitTask potion = bukkitscheduler.runTaskLater(plugin, () -> {
-                PotionEffect effect = new  PotionEffect(PotionEffectType.CONFUSION, 220, 1);
+                PotionEffect effect = new  PotionEffect(PotionEffectType.CONFUSION, 260, 1);
                 for (Player player : players) {
                     player.addPotionEffect(effect);
                 }

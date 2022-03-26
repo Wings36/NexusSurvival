@@ -1,5 +1,6 @@
 package nexusSurvival;
 
+import nexusSurvival.MovePlay.LoginEvent;
 import nexusSurvival.MovePlay.SpreadStart;
 import nexusSurvival.homeTeleporter.*;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +26,7 @@ public final class Main extends JavaPlugin {
 
         //Event move spawn
         this.getCommand("StartSpreadEvent").setExecutor(new SpreadStart(this));
+        getServer().getPluginManager().registerEvents(new LoginEvent(this), this);
         //
     }
 
