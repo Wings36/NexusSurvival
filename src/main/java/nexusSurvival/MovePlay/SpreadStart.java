@@ -80,6 +80,7 @@ public class SpreadStart implements CommandExecutor {
                     player.getInventory().clear();
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "advancement revoke " + player.getName() + " everything");
                     player.setExp(0);
+                    player.setLevel(0);
                     plugin.getConfig().set("resetevent.Players." + player.getName() + ".status", true);
                 }
                 plugin.getConfig().set("resetevent.active", true);
