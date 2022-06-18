@@ -31,6 +31,11 @@ public class SpreadStart implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+
+        commandSender.sendMessage("This command has been disabled");
+        return true;
+
+        /*
         if(commandSender.isOp()) {
             BukkitScheduler bukkitscheduler = Bukkit.getScheduler();
             Spread spread = new Spread(plugin);
@@ -85,6 +90,9 @@ public class SpreadStart implements CommandExecutor {
                 }
                 plugin.getConfig().set("resetevent.active", true);
                 plugin.saveConfig();
+
+
+
             }, 600L);
             BukkitTask worldborder = bukkitscheduler.runTaskLater(plugin, () -> {
                 Location WBnew = new Location(plugin.getServer().getWorld("world"), 9000, 64, 9000);
@@ -110,6 +118,9 @@ public class SpreadStart implements CommandExecutor {
             return true;
         }
         return false;
+        */
     }
+
+
 
 }

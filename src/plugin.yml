@@ -39,3 +39,11 @@ commands:
     description: Event
     usage: Event
     permission: nexussurvival.spread
+  banish:
+    description: Banish thee
+    usage: /banish
+    permission: nexussurvival.banish
+  toggleWorldTP:
+    description: toggle world tp
+    usage: /toggletp
+    permission: nexussurvival.toggleworldtp

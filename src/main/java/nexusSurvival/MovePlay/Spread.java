@@ -41,6 +41,12 @@ public class Spread {
 
 
         List<Player> players = plugin.getServer().getWorld("world").getPlayers();
+        //exclude dabdslayer and corkuro
+        players.remove(plugin.getServer().getPlayer("DaBDslayer"));
+        players.remove(plugin.getServer().getPlayer("CorKuro"));
+
+
+
         World world = plugin.getServer().getWorld("world");
 
 
